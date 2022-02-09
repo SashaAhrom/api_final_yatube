@@ -1,8 +1,9 @@
-from rest_framework import filters, mixins, viewsets
+from rest_framework import filters, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
+from .mixins import CreateListViewSet
 from .permissions import IsAuthorOrReadOnlyPermission
 from .serializers import (CommentSerializer, FollowSerializer,
                           GroupSerializer, PostSerializer,)
@@ -10,6 +11,10 @@ from posts.models import Follow, Group, Post
 
 
 class PostViewSet(viewsets.ModelViewSet):
+    """
+    Api endpoint has access to SAFE_METHODS
+    without registering and /api/v1/posts/ has pagination.
+    """
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     permission_classes = (IsAuthorOrReadOnlyPermission,)
@@ -20,12 +25,19 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class GroupViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    Api endpoint has only GET methods without registering.
+    """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
 
 class CommentViewSet(PostViewSet):
+    """
+    Api endpoint has access to SAFE_METHODS
+    without registering.
+    """
     serializer_class = CommentSerializer
     pagination_class = None
 
@@ -41,16 +53,14 @@ class CommentViewSet(PostViewSet):
                         post=post)
 
 
-class CreateListViewSet(mixins.CreateModelMixin,
-                        mixins.ListModelMixin,
-                        viewsets.GenericViewSet):
-    pass
-
-
 class FollowViewSet(CreateListViewSet):
+    """
+    Api endpoint has full match search.
+    Can`t subscribe twice and you can`t follow yourself.
+    """
     serializer_class = FollowSerializer
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('following__username',)
+    search_fields = ('=following__username',)
 
     def get_queryset(self):
         return Follow.objects.filter(user=self.request.user)
