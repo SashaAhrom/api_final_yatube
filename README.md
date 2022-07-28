@@ -1,44 +1,26 @@
-### Как запустить проект:
-
-Клонировать репозиторий и перейти в него в командной строке:
-
+#api_final_yatube(educational project)
+## Description
 ```
-git clone git@github.com:SashaAhrom/api_final_yatube.git
+Social network for authors and subscribers.
+Users can subscribe to favorite authors,
+leave and delete comments on posts,
+leave new posts on the main page and in
+thematic groups, attach images to published posts.
+For a detailed description of the project in
+  http://127.0.0.1:8000/redoc/
 ```
-
+## Running a project in dev mode
 ```
-cd api_final_yatube
+- Install and activate the virtual environment
+- Install dependencies from requirements.txt file
+- pip install -r requirements.txt
+- In the folder with the manage.py, run the command:
+  python3 manage.py runserver
 ```
-
-Cоздать и активировать виртуальное окружение:
-
+## System requirements
 ```
-python3 -m venv env
-```
-
-```
-source env/bin/activate
-```
-
-```
-python3 -m pip install --upgrade pip
-```
-
-Установить зависимости из файла requirements.txt:
-
-```
-pip install -r requirements.txt
-```
-
-Выполнить миграции:
-
-```
-python3 manage.py migrate
-```
-
-Запустить проект:
-
-```
-python3 manage.py runserver
+Python 3.7
+Django 2.2.19
+Djangorestframework 3.12.4
 ```
 
